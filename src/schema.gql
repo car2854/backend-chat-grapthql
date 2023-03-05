@@ -1,0 +1,74 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Chat {
+  id: Int!
+  message: String!
+  create_at: DateTime!
+  user_from: User!
+  user_to: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Interaction {
+  id: Int!
+  status_from: String!
+  status_to: String!
+  user_from: User!
+  user_to: User!
+}
+
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  create_at: DateTime!
+  is_active: Boolean!
+  token: String
+  interactions_from: [Interaction!]
+  interactions_to: [Interaction!]
+  chat_from: [Chat!]
+  chat_to: [Chat!]
+}
+
+type Query {
+  users: [User!]!
+  user(id: Int!): User!
+  interactions: [Interaction!]!
+  findUserInteraction(id: Int!): Interaction!
+  getUsersInteractions: [Interaction!]!
+  getChats(id: Int!): [Chat!]!
+}
+
+type Mutation {
+  deleteUser(id: Int!): User!
+  createChat(newChatInput: NewChatInput!): Chat!
+  login(loginUserInput: LoginUserInput!): User!
+  register(userInput: CreateUserInput!): User!
+  renewToken: User!
+  lockedUser(id: Int!): Interaction!
+  clearStatusUser(id: Int!): Interaction!
+  silencedUser(id: Int!): Interaction!
+}
+
+input NewChatInput {
+  message: String!
+  userTo: Int!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+}
