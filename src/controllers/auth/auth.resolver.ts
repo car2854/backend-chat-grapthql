@@ -19,7 +19,9 @@ export class AuthResolver {
   ){}
 
   @Mutation((returns) => User)
-  async login(@Args('loginUserInput') loginUserInput: LoginUserInput){
+  async login(
+    @Args('loginUserInput') loginUserInput: LoginUserInput
+  ){
     const user = await this.authService.findUserByEmail(loginUserInput.email);
     if (!user) throw new UnauthorizedException('Datos incorrectos');
 
@@ -31,7 +33,9 @@ export class AuthResolver {
   }
 
   @Mutation((returns) => User)
-  async register(@Args('userInput') userInput: CreateUserInput){
+  async register(
+    @Args('userInput') userInput: CreateUserInput,
+  ){
     const userDB = await this.authService.findUserByEmail(userInput.email);
     if (userDB) throw new BadRequestException('Este email ya esta siendo utilizado');
     
@@ -44,7 +48,9 @@ export class AuthResolver {
 
   @UseGuards(AuthGuard)
   @Mutation((returns) => User)
-  async renewToken(@Context('uid') uid:number){
+  async renewToken(
+    @Context('uid') uid:number
+  ){
     const user = await this.authService.findUserById(uid);
     user.token = this.jwtService.sign({ id: user.id });
     return user;

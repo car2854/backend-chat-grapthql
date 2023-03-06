@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class InteractionService {
@@ -55,17 +55,24 @@ export class InteractionService {
     })
   }
 
-  findUserInteractionByUserAuth(user: User){
+  findUserInteractionByUserAuth(user: User, userName: string = ''){
+
     return this.interactionRepository.find({
       where: [
         {
           user_from: {
-            id: user.id
+            id: user.id,
+          },
+          user_to: {
+            name: ILike(`%${userName}%`)
           }
         },
         {
           user_to: {
-            id: user.id
+            id: user.id,
+          },
+          user_from: {
+            name: ILike(`%${userName}%`)
           }
         },
       ],

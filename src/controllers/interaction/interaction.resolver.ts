@@ -20,7 +20,7 @@ export class InteractionResolver {
   @Query((returns) => Interaction)
   async findUserInteraction(
     @Context('uid') uid:number,
-    @Args('id', {type: () => Int}) id:number
+    @Args('id', {type: () => Int}) id:number,
   ){
     
     if (uid === id) throw new BadRequestException('Debe seleccionar otro usuario que no sea usted mismo')
@@ -45,11 +45,13 @@ export class InteractionResolver {
   @UseGuards(AuthGuard)
   @Query((returns) => [Interaction])
   async getUsersInteractions(
-    @Context('uid') uid:number
+    @Context('uid') uid:number,
+    @Args('userName', {nullable: true, type: () => String}) userName: string
   ){
+    
     const user = await this.interactionService.findUserById(uid);
     if (!user) throw new NotFoundException('Usted no esta registrado');
-    const interactions = await this.interactionService.findUserInteractionByUserAuth(user);
+    const interactions = await this.interactionService.findUserInteractionByUserAuth(user, userName);
     return interactions;
   }
 }
