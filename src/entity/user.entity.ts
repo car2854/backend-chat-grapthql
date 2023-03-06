@@ -29,9 +29,14 @@ export class User{
   @Column({type: 'boolean', default: true})
   @Field()
   is_active: boolean;
+  
+  @Column()
+  @Field()
+  uid_profile: string;
 
   @Field({nullable: true})
   token?: string;
+
 
   @OneToMany((_) => Interaction, (Interaction) => Interaction.user_from)
   @Field((type) => [Interaction], {nullable: true})

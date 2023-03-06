@@ -30,6 +30,7 @@ type User {
   password: String!
   create_at: DateTime!
   is_active: Boolean!
+  uid_profile: String!
   token: String
   interactions_from: [Interaction!]
   interactions_to: [Interaction!]

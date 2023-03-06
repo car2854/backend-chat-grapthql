@@ -10,6 +10,8 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserInput } from './dto/login-user.input';
 import { AuthGuard } from 'src/guard/auth.guard';
 
+import { v4 as uuidv4 } from 'uuid';
+
 @Resolver()
 export class AuthResolver {
 
@@ -41,6 +43,7 @@ export class AuthResolver {
     
     const salt = await bcrypt.genSalt();
     userInput.password = await bcrypt.hash(userInput.password, salt);
+    userInput.uid_profile = uuidv4();
     const user = await this.authService.createUser(userInput);
     user.token = this.jwtService.sign({ id: user.id });
     return user;
@@ -52,6 +55,7 @@ export class AuthResolver {
     @Context('uid') uid:number
   ){
     const user = await this.authService.findUserById(uid);
+    if (!user) throw new Error('Usted no esta registrado');
     user.token = this.jwtService.sign({ id: user.id });
     return user;
   }
