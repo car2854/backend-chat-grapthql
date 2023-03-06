@@ -62,9 +62,9 @@ export class StatusResolver {
     const interaction = await this.statusService.findInteractionByUsers(userUid, user);
     
     if (interaction.user_from.id === userUid.id){
-      interaction.status_to = '';
+      interaction.status_to = 'active';
     }else if (interaction.user_to.id === userUid.id){
-      interaction.status_from = '';
+      interaction.status_from = 'active';
     }
 
     await this.statusService.updateInteraction(interaction.id, {status_from: interaction.status_from, status_to: interaction.status_to});
