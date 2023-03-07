@@ -43,6 +43,7 @@ type Query {
   user(id: Int!): User!
   interactions: [Interaction!]!
   findUserInteraction(id: Int!): Interaction!
+  findUserInteractionByUidUser(uid_profile: String!): Interaction!
   getUsersInteractions(userName: String): [Interaction!]!
   getChats(id: Int!): [Chat!]!
 }

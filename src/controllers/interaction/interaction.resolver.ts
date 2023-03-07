@@ -36,6 +36,32 @@ export class InteractionResolver {
     
     let interaction = await this.interactionService.findInteractionByUsers(userUid, user);
     
+    if (!interaction) throw new NotFoundException('No existe una interaccion con este usuario');
+    
+    return interaction;
+
+  }
+
+  @UseGuards(AuthGuard)
+  @Query((returns) => Interaction)
+  async findUserInteractionByUidUser(
+    @Context('uid') uid:number,
+    @Args('uid_profile', {type: () => String}) uid_profile:string,
+  ){
+    
+    
+    const [userUid, user] = await Promise.all([
+      this.interactionService.findUserById(uid),
+      this.interactionService.findUserByUidProfile(uid_profile)
+    ]);
+
+    if (userUid.id === user.id) throw new BadRequestException('Debe seleccionar otro usuario que no sea usted mismo')
+    if (!userUid) throw new NotFoundException('Usted no esta registrado');
+    if (!user) throw new NotFoundException('No existe el Usuario al que intenta comunicarse')
+
+    
+    let interaction = await this.interactionService.findInteractionByUsers(userUid, user);
+    
     if (!interaction) interaction = await this.interactionService.createInteraction(userUid, user);
     
     return interaction;

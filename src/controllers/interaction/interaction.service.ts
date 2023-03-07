@@ -23,6 +23,18 @@ export class InteractionService {
       where: {
         id,
         is_active: true
+      },
+      order: {
+        create_at: 'DESC'
+      }
+    });
+  }
+
+  findUserByUidProfile(uid:string){
+    return this.userRepository.findOne({
+      where: {
+        uid_profile: uid,
+        is_active: true
       }
     });
   }
