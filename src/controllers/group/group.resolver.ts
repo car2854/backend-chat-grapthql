@@ -1,4 +1,4 @@
-import { NotFoundException, UseGuards } from '@nestjs/common';
+import { BadRequestException, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { Group } from 'src/entity/group.entity';
 import { User } from 'src/entity/user.entity';
@@ -29,7 +29,8 @@ export class GroupResolver {
     );
 
     if (users.includes(null)) throw new NotFoundException('Hay usuarios que no existen');
-    
+    if (users.includes(userUid)) throw new BadRequestException('No puede seleccionarte como usuario que se va a agregar a si mismo al grupo');
+
     const group = await this.groupService.createGroup({title: newGroupInput.title, description: newGroupInput.description});
 
     await Promise.all([

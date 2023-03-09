@@ -16,6 +16,7 @@ export class InteractionResolver {
     return this.interactionService.findAllInteraction()
   }
 
+  // Este es para buscar a los usuarios
   @UseGuards(AuthGuard)
   @Query((returns) => Interaction)
   async findUserInteraction(
@@ -41,7 +42,33 @@ export class InteractionResolver {
     return interaction;
 
   }
+  // Buscar por grupos
 
+  @UseGuards(AuthGuard)
+  @Query((returns) => Interaction)
+  async findGroupInteraction(
+    @Context('uid') uid:number,
+    @Args('id', {type: () => String!}) id:string,
+  ){
+    
+    const [userUid, group] = await Promise.all([
+      this.interactionService.findUserById(uid),
+      this.interactionService.findGroupById(id)
+    ]);
+
+    if (!userUid) throw new NotFoundException('Usted no esta registrado');
+    if (!group) throw new NotFoundException('No existe ese grupo')
+
+    
+    let interaction = await this.interactionService.findInteractionGroupByUser(userUid, group);
+    
+    if (!interaction) throw new NotFoundException('No existe una interaccion con este usuario');
+    
+    return interaction;
+
+  }
+
+  // Este es para agregar nuevos usuarios por uid
   @UseGuards(AuthGuard)
   @Query((returns) => Interaction)
   async findUserInteractionByUidUser(
@@ -80,4 +107,5 @@ export class InteractionResolver {
     const interactions = await this.interactionService.findUserInteractionByUserAuth(user, userName);
     return interactions;
   }
+
 }

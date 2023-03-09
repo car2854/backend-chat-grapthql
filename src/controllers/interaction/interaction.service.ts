@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Group } from 'src/entity/group.entity';
 import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
 import { ILike, Repository } from 'typeorm';
@@ -12,6 +13,9 @@ export class InteractionService {
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    @InjectRepository(Group)
+    private groupRepository: Repository<Group>
   ){}
 
   findAllInteraction(): Promise<Interaction[]> {
@@ -62,7 +66,28 @@ export class InteractionService {
       ],
       relations: {
         user_from: true,
-        user_to: true
+        user_to: true,
+        group_from: true
+      }
+    })
+  }
+
+  findInteractionGroupByUser(user: User, group: Group){
+
+    return this.interactionRepository.findOne({
+      where: [
+        {
+          group_from: {
+            id: group.id
+          },
+          user_to: {
+            id: user.id
+          }
+        },
+      ],
+      relations: {
+        user_to: true,
+        group_from: true
       }
     })
   }
@@ -87,10 +112,19 @@ export class InteractionService {
             name: ILike(`%${userName}%`)
           }
         },
+        {
+          user_to: {
+            id: user.id,
+          },
+          group_from: {
+            title: ILike(`%${userName}%`)
+          }
+        },
       ],
       relations: {
         user_from: true,
-        user_to: true
+        user_to: true,
+        group_from: true
       }
     })
   }
@@ -98,5 +132,13 @@ export class InteractionService {
   createInteraction(user1: User, user2: User){
     const interactionData = this.interactionRepository.create({user_from: user1, user_to: user2});
     return this.interactionRepository.save(interactionData);
+  }
+
+  findGroupById(id:string){
+    return this.groupRepository.findOne({
+      where: {
+        id
+      }
+    })
   }
 }

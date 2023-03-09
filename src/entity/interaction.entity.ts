@@ -26,7 +26,7 @@ export class Interaction{
   
   @ManyToOne((_) => User, (User) => User.interactions_from, {cascade: true, nullable: true})
   @JoinColumn({name: 'user_from'})
-  @Field((type) => User)
+  @Field((type) => User, {nullable: true})
   user_from: User;
 
   @ManyToOne((_) => Group, (Group) => Group.interactions_from, {cascade: true, nullable: true})

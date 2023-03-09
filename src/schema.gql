@@ -7,7 +7,7 @@ type Interaction {
   status_from: String!
   status_to: String!
   user_to: User
-  user_from: User!
+  user_from: User
   group_from: Group
 }
 
@@ -55,6 +55,7 @@ type Query {
   user(id: Int!): User!
   interactions: [Interaction!]!
   findUserInteraction(id: Int!): Interaction!
+  findGroupInteraction(id: String!): Interaction!
   findUserInteractionByUidUser(uid_profile: String!): Interaction!
   getUsersInteractions(userName: String): [Interaction!]!
   getChats(id: Int!): [Chat!]!

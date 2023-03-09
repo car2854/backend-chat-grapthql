@@ -6,10 +6,11 @@ import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { Group } from 'src/entity/group.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Interaction, User]),
+    TypeOrmModule.forFeature([Interaction, User, Group]),
     ConfigModule.forRoot({
       envFilePath: '.env'
     }),
