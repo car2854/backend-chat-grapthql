@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from './entity/user.entity';
 import { Interaction } from './entity/interaction.entity';
 import { Chat } from './entity/chat.entity';
+import { Group } from './entity/group.entity';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { Chat } from './entity/chat.entity';
       entities: [
         User, 
         Interaction,
-        Chat
+        Chat,
+        Group
       ]
     }),
     ControllersModule
