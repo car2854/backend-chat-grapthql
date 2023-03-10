@@ -78,6 +78,28 @@ export class ChatService {
       relations: {
         user_from: true,
         user_to: true
+      },
+      order: {
+        create_at: 'DESC'
+      }
+    });
+  }
+
+  findAllChatByGroup(group: Group){
+    return this.chatRepository.find({
+      where: [
+        {
+          group_to: {
+            id: group.id
+          }
+        },
+      ],
+      relations: {
+        user_from: true,
+        group_to: true
+      },
+      order: {
+        create_at: 'DESC'
       }
     });
   }

@@ -59,6 +59,7 @@ type Query {
   findUserInteractionByUidUser(uid_profile: String!): Interaction!
   getUsersInteractions(userName: String): [Interaction!]!
   getChats(id: Int!): [Chat!]!
+  getChatsGroup(id: String!): [Chat!]!
 }
 
 type Mutation {

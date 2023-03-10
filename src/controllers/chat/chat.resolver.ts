@@ -38,6 +38,23 @@ export class ChatResolver {
   }
 
   @UseGuards(AuthGuard)
+  @Query((returns) => [Chat])
+  async getChatsGroup(
+    @Args('id', {type: () => String!}) id:string,
+    @Context('uid') uid:number
+  ){
+    const [user, group] = await Promise.all([
+      this.chatService.finduserById(uid),
+      this.chatService.findGroupById(id),
+    ]);
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+    if (!group) throw new NotFoundException('No existe este grupo');
+    if (!group.interactions_from.some((interacion: Interaction) => interacion.user_to.id === user.id)) throw new BadRequestException('Usted no pertenece a este grupo')
+    const messages = await this.chatService.findAllChatByGroup(group);
+    return messages;
+  }
+
+  @UseGuards(AuthGuard)
   @Mutation((returns) => Chat)
   async createChat(
     @Args('newChatInput') newChatInput: NewChatInput,
