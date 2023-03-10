@@ -19,6 +19,10 @@ export class Interaction{
   @Field()
   status_to: string;
 
+  @Column({default: ''})
+  @Field()
+  role: string;
+
   @ManyToOne((_) => User, (User) => User.interactions_to, {cascade: true})
   @JoinColumn({name: 'user_to'})
   @Field((type) => User, {nullable: true})

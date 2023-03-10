@@ -4,6 +4,7 @@ import { AuthGuard } from 'src/guard/auth.guard';
 import { StatusService } from './status.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Interaction } from 'src/entity/interaction.entity';
+import { StatusInteractionEnum } from 'src/enum/status-interaction';
 
 @Resolver()
 export class StatusResolver {
@@ -32,9 +33,9 @@ export class StatusResolver {
     const interaction = await this.statusService.findInteractionByUsers(userUid, user);
     
     if (interaction.user_from.id === userUid.id){
-      interaction.status_to = 'locked';
+      interaction.status_to = StatusInteractionEnum.locked;
     }else if (interaction.user_to.id === userUid.id){
-      interaction.status_from = 'locked';
+      interaction.status_from = StatusInteractionEnum.locked;
     }
 
     await this.statusService.updateInteraction(interaction.id, {status_from: interaction.status_from, status_to: interaction.status_to});
@@ -62,9 +63,9 @@ export class StatusResolver {
     const interaction = await this.statusService.findInteractionByUsers(userUid, user);
     
     if (interaction.user_from.id === userUid.id){
-      interaction.status_to = 'active';
+      interaction.status_to = StatusInteractionEnum.active;
     }else if (interaction.user_to.id === userUid.id){
-      interaction.status_from = 'active';
+      interaction.status_from = StatusInteractionEnum.active;
     }
 
     await this.statusService.updateInteraction(interaction.id, {status_from: interaction.status_from, status_to: interaction.status_to});
@@ -91,9 +92,9 @@ export class StatusResolver {
     const interaction = await this.statusService.findInteractionByUsers(userUid, user);
     
     if (interaction.user_from.id === userUid.id){
-      interaction.status_to = 'silenced';
+      interaction.status_to = StatusInteractionEnum.silenced;
     }else if (interaction.user_to.id === userUid.id){
-      interaction.status_from = 'silenced';
+      interaction.status_from = StatusInteractionEnum.silenced;
     }
 
     await this.statusService.updateInteraction(interaction.id, {status_from: interaction.status_from, status_to: interaction.status_to});

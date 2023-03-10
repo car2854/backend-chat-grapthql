@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from 'src/entity/group.entity';
 import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
+import { RoleUserInteraction } from 'src/enum/role-user-interaction';
 import { Repository } from 'typeorm';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -35,9 +36,34 @@ export class GroupService {
     return this.groupRepository.save(groupData);
   }
 
-  public createInteraction = (data: {group_from: Group, user_to: User}) => {
+  public createInteraction = (data: {group_from: Group, user_to: User, role?: RoleUserInteraction}) => {
     const interactionData = this.interactionRepository.create(data);
     return this.interactionRepository.save(interactionData);
   }
 
+  public findGroupById = (id:string) => {
+    return this.groupRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        interactions_from: {
+          user_to: true
+        }
+      }
+    });
+  }
+
+  public findAllInteractionsByGroup = (group: Group) => {
+    return this.interactionRepository.find({
+      where: {
+        group_from:{
+          id: group.id
+        }
+      },
+      relations: {
+        user_to: true
+      }
+    });
+  }
 }

@@ -6,6 +6,7 @@ type Interaction {
   id: Int!
   status_from: String!
   status_to: String!
+  role: String!
   user_to: User
   user_from: User
   group_from: Group
@@ -60,6 +61,7 @@ type Query {
   getUsersInteractions(userName: String): [Interaction!]!
   getChats(id: Int!): [Chat!]!
   getChatsGroup(id: String!): [Chat!]!
+  getAllUsersWithinGroup(id: String!): [Interaction!]!
 }
 
 type Mutation {
