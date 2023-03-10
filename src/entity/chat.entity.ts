@@ -30,7 +30,7 @@ export class Chat{
   user_to: User;
 
   @ManyToOne((_) => Group, (Group) => Group.chats_to, {cascade: true, nullable: true})
-  @JoinColumn({name: 'group_to'})
+  @JoinColumn({name: 'group_to_id'})
   @Field((type) => Group, {nullable: true})
   group_to: Group;
 

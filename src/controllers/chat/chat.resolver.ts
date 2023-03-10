@@ -6,6 +6,7 @@ import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { ChatService } from './chat.service';
+import { NewChatGroupInput } from './dto/new-chat-group.input';
 import { NewChatInput } from './dto/new-chat.input';
 
 @Resolver()
@@ -54,14 +55,39 @@ export class ChatResolver {
     const interaction = await this.chatService.findInteractionByUsers(userFrom, userTo);
     if (!interaction) throw new NotFoundException('No hay una interaccion con este usuario');
 
-    if (['locked','silenced'].includes(interaction.status_from)){
+    if (['locked'].includes(interaction.status_from)){
       throw new BadRequestException(interaction.status_from)
     }
-    if (['locked','silenced'].includes(interaction.status_to)){
+    if (['locked'].includes(interaction.status_to)){
       throw new BadRequestException(interaction.status_to)
     }
 
     const chat = await this.chatService.createChat(newChatInput.message, userFrom, userTo);
+    return chat;
+
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => Chat)
+  async createChatGroup(
+    @Context('uid') uid:number,
+    @Args('newChatGroupInput') newChatGroupInput: NewChatGroupInput
+  ){
+
+    const user = await this.chatService.finduserById(uid);
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+
+    const group = await this.chatService.findGroupById(newChatGroupInput.groupTo);
+    if (!group) throw new NotFoundException('No existe este grupo');
+
+    if (!group.interactions_from.some((interacion: Interaction) => interacion.user_to.id === user.id)) throw new BadRequestException('Usted no pertenece a este grupo')
+
+    const chat = await this.chatService.createChatGroup({
+      message: newChatGroupInput.message,
+      group_to: group,
+      user_from: user
+    });
+
     return chat;
 
   }

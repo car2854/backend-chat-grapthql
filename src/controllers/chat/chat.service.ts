@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Chat } from 'src/entity/chat.entity';
+import { Group } from 'src/entity/group.entity';
 import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
@@ -17,6 +18,9 @@ export class ChatService {
 
     @InjectRepository(Interaction)
     private interactionRepository: Repository<Interaction>,
+
+    @InjectRepository(Group)
+    private groupRepository: Repository<Group>,
   ){}
 
   finduserById(id:number){
@@ -80,6 +84,24 @@ export class ChatService {
 
   createChat(message:string, userFrom: User, userTo: User){
     const chatData = this.chatRepository.create({message, user_from: userFrom, user_to: userTo});
+    return this.chatRepository.save(chatData);
+  }
+
+  findGroupById(id:string){
+    return this.groupRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        interactions_from: {
+          user_to: true
+        }
+      }
+    });
+  }
+
+  createChatGroup(data:{message:string, user_from: User, group_to: Group}){
+    const chatData = this.chatRepository.create(data);
     return this.chatRepository.save(chatData);
   }
 }

@@ -64,6 +64,7 @@ type Query {
 type Mutation {
   deleteUser(id: Int!): User!
   createChat(newChatInput: NewChatInput!): Chat!
+  createChatGroup(newChatGroupInput: NewChatGroupInput!): Chat!
   login(loginUserInput: LoginUserInput!): User!
   register(userInput: CreateUserInput!): User!
   renewToken: User!
@@ -76,6 +77,11 @@ type Mutation {
 input NewChatInput {
   message: String!
   userTo: Int!
+}
+
+input NewChatGroupInput {
+  message: String!
+  groupTo: String!
 }
 
 input LoginUserInput {
