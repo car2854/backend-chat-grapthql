@@ -66,4 +66,33 @@ export class GroupService {
       }
     });
   }
+
+  public findInteractionById = (id:number) => {
+    return this.interactionRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        group_from: true
+      }
+    })
+  }
+
+  public findInteractionByUserGroup = (user: User, group: Group) => {
+
+    return this.interactionRepository.findOne({
+      where: {
+        user_to:{
+          id : user.id
+        },
+        group_from: {
+          id: group.id
+        }
+      }
+    })
+  }
+
+  public updateInteraction = (id:number, data:any) => {
+    return this.interactionRepository.update(id, data);
+  }
 }

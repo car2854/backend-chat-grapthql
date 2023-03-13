@@ -1,9 +1,10 @@
-import { BadRequestException, NotFoundException, UseGuards } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Logger, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Context, Int, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { Group } from 'src/entity/group.entity';
 import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
 import { RoleUserInteraction } from 'src/enum/role-user-interaction';
+import { StatusInteractionEnum } from 'src/enum/status-interaction';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { NewGroupInput } from './dto/new-group.input';
 import { UserInput } from './dto/user.input';
@@ -61,5 +62,29 @@ export class GroupResolver {
 
     return interactions;
 
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => Interaction)
+  async newModerator(
+    @Context('uid') uid:number,
+    @Args('id', {type: () => Int!}) id:number
+  ){
+
+    const user = await this.groupService.findUserById(uid);
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+
+    const interaction = await this.groupService.findInteractionById(id);
+    if (!interaction) throw new NotFoundException('No existe esta interaccion entre el usuario y el grupo');
+
+    const interactionUser = await this.groupService.findInteractionByUserGroup(user, interaction.group_from);
+    if (!interactionUser) throw new NotFoundException('No existe esta interaccion entre usted y el grupo');
+    
+    if (!(interactionUser.role === RoleUserInteraction.host || interactionUser.role === RoleUserInteraction.moderator)) throw new ForbiddenException('Usted no es un moderador o host de este grupo');
+
+    interaction.role = RoleUserInteraction.moderator;
+    await this.groupService.updateInteraction(interaction.id, {role: interaction.role});
+
+    return interaction;
   }
 }
