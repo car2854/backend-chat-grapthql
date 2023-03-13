@@ -87,4 +87,28 @@ export class GroupResolver {
 
     return interaction;
   }
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => Interaction)
+  async clearRole(
+    @Context('uid') uid:number,
+    @Args('id', {type: () => Int!}) id:number
+  ){
+
+    const user = await this.groupService.findUserById(uid);
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+
+    const interaction = await this.groupService.findInteractionById(id);
+    if (!interaction) throw new NotFoundException('No existe esta interaccion entre el usuario y el grupo');
+
+    const interactionUser = await this.groupService.findInteractionByUserGroup(user, interaction.group_from);
+    if (!interactionUser) throw new NotFoundException('No existe esta interaccion entre usted y el grupo');
+    
+    if (!(interactionUser.role === RoleUserInteraction.host || interactionUser.role === RoleUserInteraction.moderator)) throw new ForbiddenException('Usted no es un moderador o host de este grupo');
+
+    interaction.role = RoleUserInteraction.none;
+    await this.groupService.updateInteraction(interaction.id, {role: interaction.role});
+
+    return interaction;
+  }
 }

@@ -76,6 +76,7 @@ type Mutation {
   silencedUser(id: Int!): Interaction!
   createGroup(newGroupInput: NewGroupInput!): Group!
   newModerator(id: Int!): Interaction!
+  clearRole(id: Int!): Interaction!
 }
 
 input NewChatInput {
