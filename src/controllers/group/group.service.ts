@@ -95,4 +95,42 @@ export class GroupService {
   public updateInteraction = (id:number, data:any) => {
     return this.interactionRepository.update(id, data);
   }
+
+  public findInteractionByUserUidAndUser = (userUid: User, user: User) => {
+    return this.interactionRepository.findOne({
+      where: [
+        {
+          user_from: {
+            id: userUid.id
+          },
+          user_to: {
+            id: user.id
+          }
+        },
+        {
+          user_from: {
+            id: user.id
+          },
+          user_to: {
+            id: userUid.id
+          }
+        }
+      ],
+      relations: {
+        user_from: true,
+        user_to: true
+      }
+    })
+  }
+
+  public findUserByUidProfile = (uid:string) => {
+    return this.userRepository.findOne({
+      where: {
+        uid_profile: uid,
+        is_active: true
+      }
+    })
+  }
+
+  
 }

@@ -111,4 +111,46 @@ export class GroupResolver {
 
     return interaction;
   }
+
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => Interaction)
+  async addNewUserGroup(
+    @Context('uid') uid:number,
+    @Args('idGroup', {type: () => String!}) idGroup: string,
+    @Args('uidUser', {type: () => String!}) uidUser: string
+  ){
+
+    const [userUid, user, group] = await Promise.all([
+      this.groupService.findUserById(uid),
+      this.groupService.findUserByUidProfile(uidUser),
+      this.groupService.findGroupById(idGroup)
+    ]);
+
+    if (!userUid) throw new NotFoundException('Usted no esta registrado');
+    if (!user) throw new NotFoundException('Este usuario no existe');
+    if (!group) throw new NotFoundException('Este grupo no existe');
+
+    const [interactionGroup, interactionUser, interactionUserGroup] = await Promise.all([
+      this.groupService.findInteractionByUserGroup(userUid, group),
+      this.groupService.findInteractionByUserUidAndUser(userUid, user),
+      this.groupService.findInteractionByUserGroup(user, group)
+    ]);
+
+    if (!interactionGroup || !(interactionGroup.role === RoleUserInteraction.host || interactionGroup.role === RoleUserInteraction.moderator)) throw new BadRequestException('Usted no es host o administrador del grupo');
+    if (interactionUser){
+
+      if (interactionUser.user_from.id === userUid.id && interactionUser.status_from === StatusInteractionEnum.locked) throw new BadRequestException('Este usuario te ha bloqueado');
+      else if (interactionUser.user_to.id === userUid.id && interactionUser.status_to === StatusInteractionEnum.locked) throw new BadRequestException('Este usuario te ha bloqueado');
+    }
+    if (interactionUserGroup) throw new BadRequestException('Este usuario ya esta en el grupo');
+
+    const interaction = await this.groupService.createInteraction({
+      group_from: group,
+      user_to: user,
+      role: RoleUserInteraction.none
+    });
+
+    return interaction;
+  }
 }

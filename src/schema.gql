@@ -12,14 +12,19 @@ type Interaction {
   group_from: Group
 }
 
-type Group {
-  id: String!
-  title: String!
-  description: String
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
   create_at: DateTime!
-  allow_image: Boolean!
-  interactions_from: Interaction!
-  chats_to: Chat!
+  is_active: Boolean!
+  uid_profile: String!
+  token: String
+  interactions_from: [Interaction!]
+  interactions_to: [Interaction!]
+  chat_from: [Chat!]
+  chat_to: [Chat!]
 }
 
 """
@@ -36,19 +41,14 @@ type Chat {
   group_to: Group
 }
 
-type User {
-  id: Int!
-  name: String!
-  email: String!
-  password: String!
+type Group {
+  id: String!
+  title: String!
+  description: String
   create_at: DateTime!
-  is_active: Boolean!
-  uid_profile: String!
-  token: String
-  interactions_from: [Interaction!]
-  interactions_to: [Interaction!]
-  chat_from: [Chat!]
-  chat_to: [Chat!]
+  allow_image: Boolean!
+  interactions_from: Interaction!
+  chats_to: Chat!
 }
 
 type Query {
@@ -77,6 +77,7 @@ type Mutation {
   createGroup(newGroupInput: NewGroupInput!): Group!
   newModerator(id: Int!): Interaction!
   clearRole(id: Int!): Interaction!
+  addNewUserGroup(idGroup: String!, uidUser: String!): Interaction!
 }
 
 input NewChatInput {
