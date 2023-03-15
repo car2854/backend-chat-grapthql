@@ -27,6 +27,10 @@ export class Group{
   @Field((type) => Boolean)
   allow_image: boolean;
 
+  @Column({type: 'boolean', default: false})
+  @Field((type) => Boolean)
+  only_mod_host: boolean;
+
   @OneToMany((_) => Interaction, (Interaction) => Interaction.group_from)
   @Field((type) => Interaction)
   interactions_from: Interaction[];

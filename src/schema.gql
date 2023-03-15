@@ -47,6 +47,7 @@ type Group {
   description: String
   create_at: DateTime!
   allow_image: Boolean!
+  only_mod_host: Boolean!
   interactions_from: Interaction!
   chats_to: Chat!
 }
