@@ -132,5 +132,8 @@ export class GroupService {
     })
   }
 
+  public deleteInteraction = (id:number) => {
+    return this.interactionRepository.delete(id);
+  }
   
 }

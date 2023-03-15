@@ -153,4 +153,38 @@ export class GroupResolver {
 
     return interaction;
   }
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => Interaction)
+  async removeFromGroup(
+    @Context('uid') uid:number,
+    @Args('idGroup', {type: () => String!}) idGroup:string,
+    @Args('idUser', {type: () => Int!}) idUser:number,
+  ){
+    
+    const [userUid, user, group] = await Promise.all([
+      this.groupService.findUserById(uid),
+      this.groupService.findUserById(idUser),
+      this.groupService.findGroupById(idGroup)
+    ]);
+    
+    if (!userUid) throw new NotFoundException('Usted no esta registrado');
+    if (!group) throw new NotFoundException('No existe este grupo');
+    if (!user) throw new NotFoundException('No existe este usuario');
+
+    const [interactionUserUidGroup, interactionUserGroup] = await Promise.all([
+      this.groupService.findInteractionByUserGroup(userUid, group),
+      this.groupService.findInteractionByUserGroup(user, group),
+    ]);
+
+    if (!interactionUserUidGroup || !(interactionUserUidGroup.role === RoleUserInteraction.host || interactionUserUidGroup.role === RoleUserInteraction.moderator)) throw new BadRequestException('Usted no es host o administrador del grupo');
+    if (!interactionUserGroup) throw new NotFoundException('Este usuario no esta en este grupo');
+    if (userUid.id === user.id) throw new BadRequestException('Usted no puede sacarse a si mismo');
+    if (interactionUserUidGroup.role === RoleUserInteraction.moderator && (interactionUserGroup.role === RoleUserInteraction.moderator || interactionUserGroup.role === RoleUserInteraction.host)) throw new BadRequestException('Usted no puede sacar a este usuario del grupo, solo el host puede hacerlo');
+
+    await this.groupService.deleteInteraction(interactionUserGroup.id);
+
+    return interactionUserGroup;
+
+  }
 }

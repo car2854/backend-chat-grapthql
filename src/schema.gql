@@ -78,6 +78,7 @@ type Mutation {
   newModerator(id: Int!): Interaction!
   clearRole(id: Int!): Interaction!
   addNewUserGroup(idGroup: String!, uidUser: String!): Interaction!
+  removeFromGroup(idGroup: String!, idUser: Int!): Interaction!
 }
 
 input NewChatInput {

@@ -5,12 +5,13 @@ import { Observable } from 'rxjs';
 import { UnauthorizedException } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/controllers/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
   constructor(
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ){}
 
   canActivate(
@@ -18,7 +19,9 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     
     const ctx = GqlExecutionContext.create(context).getContext();
+
     const token = ctx.req.headers.token;
+
     if (!token){
       throw new UnauthorizedException('No hay token en la peticion');
     }
