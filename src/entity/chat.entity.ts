@@ -17,7 +17,7 @@ export class Chat{
 
   @CreateDateColumn()
   @Field()
-  create_at: Date;
+  created_at: Date;
 
   @ManyToOne((_) => User, (User) => User.chat_from, {cascade: true})
   @JoinColumn({name: 'user_from_id'})

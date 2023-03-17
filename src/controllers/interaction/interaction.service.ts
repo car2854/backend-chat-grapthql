@@ -29,7 +29,7 @@ export class InteractionService {
         is_active: true
       },
       order: {
-        create_at: 'DESC'
+        created_at: 'DESC'
       }
     });
   }

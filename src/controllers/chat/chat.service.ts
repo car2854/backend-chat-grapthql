@@ -80,7 +80,7 @@ export class ChatService {
         user_to: true
       },
       order: {
-        create_at: 'DESC'
+        created_at: 'DESC'
       }
     });
   }
@@ -99,7 +99,7 @@ export class ChatService {
         group_to: true
       },
       order: {
-        create_at: 'DESC'
+        created_at: 'DESC'
       }
     });
   }

@@ -24,7 +24,7 @@ export class User{
 
   @CreateDateColumn()
   @Field()
-  create_at: Date;
+  created_at: Date;
 
   @Column({type: 'boolean', default: true})
   @Field()
@@ -36,7 +36,6 @@ export class User{
 
   @Field({nullable: true})
   token?: string;
-
 
   @OneToMany((_) => Interaction, (Interaction) => Interaction.user_from)
   @Field((type) => [Interaction], {nullable: true})

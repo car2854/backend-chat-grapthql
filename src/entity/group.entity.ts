@@ -21,7 +21,7 @@ export class Group{
 
   @CreateDateColumn()
   @Field()
-  create_at: Date;
+  created_at: Date;
 
   @Column({type: 'boolean', default: true})
   @Field((type) => Boolean)
