@@ -135,5 +135,9 @@ export class GroupService {
   public deleteInteraction = (id:number) => {
     return this.interactionRepository.delete(id);
   }
+
+  public updateGroup = (id:string, data:{title?:string, description?:string, allow_image?:boolean, only_mod_host?:boolean}) => {
+    return this.groupRepository.update(id, data);
+  }
   
 }

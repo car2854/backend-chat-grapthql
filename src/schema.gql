@@ -80,6 +80,7 @@ type Mutation {
   clearRole(id: Int!): Interaction!
   addNewUserGroup(idGroup: String!, uidUser: String!): Interaction!
   removeFromGroup(idGroup: String!, idUser: Int!): Interaction!
+  updateGroup(updateGroupInput: UpdateGroupInput!): Group!
 }
 
 input NewChatInput {
@@ -112,4 +113,12 @@ input NewGroupInput {
 input UserInput {
   id: Int!
   name: String!
+}
+
+input UpdateGroupInput {
+  idGroup: String!
+  title: String
+  description: String
+  allow_image: Boolean
+  only_mod_host: Boolean
 }

@@ -7,6 +7,7 @@ import { RoleUserInteraction } from 'src/enum/role-user-interaction';
 import { StatusInteractionEnum } from 'src/enum/status-interaction';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { NewGroupInput } from './dto/new-group.input';
+import { UpdateGroupInput } from './dto/update-group.input';
 import { UserInput } from './dto/user.input';
 import { GroupService } from './group.service';
 
@@ -185,6 +186,40 @@ export class GroupResolver {
     await this.groupService.deleteInteraction(interactionUserGroup.id);
 
     return interactionUserGroup;
+
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => Group)
+  async updateGroup(
+    @Context('uid') uid:number,
+    @Args('updateGroupInput', {type: () => UpdateGroupInput!}) updateGroupInput: UpdateGroupInput
+  ){
+    
+    const [userUid, group] = await Promise.all([
+      this.groupService.findUserById(uid),
+      this.groupService.findGroupById(updateGroupInput.idGroup)
+    ]);
+
+    if (!userUid) throw new NotFoundException('Usted no esta registrado');
+    if (!group) throw new NotFoundException('No existe este grupo');
+
+    const interaction = await this.groupService.findInteractionByUserGroup(userUid, group);
+    if (!interaction) throw new BadRequestException('Usted no esta en este grupo');
+    if (!interaction || !(interaction.role === RoleUserInteraction.host || interaction.role === RoleUserInteraction.moderator)) throw new BadRequestException('Usted no es host o administrador del grupo');
+
+    const {idGroup, ...data} = updateGroupInput;
+
+    group.allow_image = updateGroupInput.allow_image ?? group.allow_image;
+    group.only_mod_host = updateGroupInput.only_mod_host ?? group.only_mod_host;
+    group.title = updateGroupInput.title ?? group.title;
+    group.description = updateGroupInput.description ?? group.description;
+
+    if (!(JSON.stringify(data) === '{}')){
+      await this.groupService.updateGroup(idGroup, data);
+    }
+
+    return group;
 
   }
 }
