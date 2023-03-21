@@ -1,7 +1,8 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Chat } from './chat.entity';
 import { Interaction } from './interaction.entity';
+import { Image } from './image.entity';
 
 @Entity('users')
 @ObjectType()
@@ -52,4 +53,8 @@ export class User{
   @OneToMany((_) => Chat, (Chat) => Chat.user_to)
   @Field((type) => [Chat], {nullable: true})
   chat_to: Chat[];
+
+  @OneToOne((_) => Image, (Image) => Image.user)
+  @Field((type) => Image, {nullable: true})
+  image: Image;
 }

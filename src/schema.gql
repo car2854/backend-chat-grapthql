@@ -12,6 +12,21 @@ type Interaction {
   group_from: Group
 }
 
+type Image {
+  id: Int!
+  name: String!
+  dir: String!
+  created_at: DateTime!
+  user: User
+  chat: Chat
+  group: Group
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type User {
   id: Int!
   name: String!
@@ -25,12 +40,8 @@ type User {
   interactions_to: [Interaction!]
   chat_from: [Chat!]
   chat_to: [Chat!]
+  image: Image
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Chat {
   id: Int!
@@ -39,6 +50,7 @@ type Chat {
   user_from: User!
   user_to: User
   group_to: Group
+  image: Image
 }
 
 type Group {
@@ -50,6 +62,7 @@ type Group {
   only_mod_host: Boolean!
   interactions_from: Interaction!
   chats_to: Chat!
+  image: Image
 }
 
 type Query {

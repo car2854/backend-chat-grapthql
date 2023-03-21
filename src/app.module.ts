@@ -10,10 +10,15 @@ import { User } from './entity/user.entity';
 import { Interaction } from './entity/interaction.entity';
 import { Chat } from './entity/chat.entity';
 import { Group } from './entity/group.entity';
+import { Image } from './entity/image.entity';
 
+import { MulterModule } from "@nestjs/platform-express";
 
 @Module({
   imports: [
+    MulterModule.register({
+      
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env'
     }),
@@ -34,7 +39,8 @@ import { Group } from './entity/group.entity';
         User, 
         Interaction,
         Chat,
-        Group
+        Group,
+        Image
       ]
     }),
     ControllersModule
