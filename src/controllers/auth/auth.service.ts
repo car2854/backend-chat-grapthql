@@ -18,6 +18,9 @@ export class AuthService {
       where: {
         email,
         is_active: true
+      },
+      relations:{
+        image:true
       }
     });
   }
@@ -27,6 +30,9 @@ export class AuthService {
       where: {
         id, 
         is_active: true
+      },
+      relations:{
+        image:true
       }
     })
   }

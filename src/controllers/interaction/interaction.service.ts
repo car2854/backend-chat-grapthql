@@ -65,9 +65,15 @@ export class InteractionService {
         },
       ],
       relations: {
-        user_from: true,
-        user_to: true,
-        group_from: true
+        user_from: {
+          image: true
+        },
+        user_to: {
+          image: true
+        },
+        group_from: {
+          image: true
+        }
       }
     })
   }
@@ -122,9 +128,15 @@ export class InteractionService {
         },
       ],
       relations: {
-        user_from: true,
-        user_to: true,
-        group_from: true
+        user_from: {
+          image: true
+        },
+        user_to: {
+          image: true
+        },
+        group_from: {
+          image: true
+        },
       }
     })
   }
