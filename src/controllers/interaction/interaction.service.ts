@@ -93,7 +93,9 @@ export class InteractionService {
       ],
       relations: {
         user_to: true,
-        group_from: true
+        group_from: {
+          image: true
+        }
       }
     })
   }

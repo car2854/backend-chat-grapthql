@@ -80,6 +80,7 @@ type Query {
 
 type Mutation {
   deleteUser(id: Int!): User!
+  updateUidProfile: User!
   createChat(newChatInput: NewChatInput!): Chat!
   createChatGroup(newChatGroupInput: NewChatGroupInput!): Chat!
   login(loginUserInput: LoginUserInput!): User!

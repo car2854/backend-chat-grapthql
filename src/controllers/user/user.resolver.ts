@@ -8,6 +8,8 @@ import { AuthGuard } from 'src/guard/auth.guard';
 import { CreateUserInput } from './dto/create-user.input';
 import { UserService } from './user.service';
 
+import { v4 as uuidv4 } from 'uuid';
+
 @Resolver()
 export class UserResolver {
 
@@ -48,6 +50,24 @@ export class UserResolver {
     user.is_active = false;
     await this.userService.deleteUser(id);
     return user;
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => User)
+  async updateUidProfile(
+    @Context('uid') uid: number
+  ){
+
+    const user = await this.userService.findUserById(uid);
+
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+
+    user.uid_profile = uuidv4();
+
+    await this.userService.updateUser(user.id, {uid_profile: user.uid_profile});
+
+    return user;
+
   }
 
 }
