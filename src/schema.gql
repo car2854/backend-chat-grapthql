@@ -30,6 +30,7 @@ scalar DateTime
 type User {
   id: Int!
   name: String!
+  status: String
   email: String!
   password: String!
   created_at: DateTime!
@@ -81,6 +82,7 @@ type Query {
 type Mutation {
   deleteUser(id: Int!): User!
   updateUidProfile: User!
+  updateStatusUser(status: String!): User!
   createChat(newChatInput: NewChatInput!): Chat!
   createChatGroup(newChatGroupInput: NewChatGroupInput!): Chat!
   login(loginUserInput: LoginUserInput!): User!

@@ -70,4 +70,22 @@ export class UserResolver {
 
   }
 
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => User)
+  async updateStatusUser(
+    @Context('uid') uid:number,
+    @Args('status', {type: () => String!}) status:string
+  ){
+
+    const user = await this.userService.findUserById(uid);
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+
+
+    user.status = status;
+    const result = await this.userService.updateUser(user.id, {status: status});
+    console.log(result);
+    
+    return user;
+
+  }
 }

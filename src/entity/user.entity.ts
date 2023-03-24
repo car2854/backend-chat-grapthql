@@ -15,6 +15,10 @@ export class User{
   @Field()
   name: string;
   
+  @Column({nullable: true})
+  @Field({nullable: true})
+  status: string;
+
   @Column()
   @Field()
   email: string;
