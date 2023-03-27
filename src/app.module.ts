@@ -13,6 +13,7 @@ import { Group } from './entity/group.entity';
 import { Image } from './entity/image.entity';
 
 import { MulterModule } from "@nestjs/platform-express";
+import { EventsGateway } from './events/events.gateway';
 
 @Module({
   imports: [
@@ -46,6 +47,6 @@ import { MulterModule } from "@nestjs/platform-express";
     ControllersModule
   ],
   controllers: [],
-  providers: [],
+  providers: [EventsGateway],
 })
 export class AppModule {}
