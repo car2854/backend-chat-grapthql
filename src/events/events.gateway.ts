@@ -22,18 +22,24 @@ export class EventsGateway {
   }
 
   @SubscribeMessage('join-user')
-  handleJoinUser(client: Socket, payload: {user_id:number}[]){
+  handleJoinUser(client: Socket, payload: {user_id:number, group:any}[]){
     
+    payload[0].group.forEach((element:any) => {
+      client.join(element.id);
+    });
+
     client.join(payload[0].user_id.toString());
     
   }
 
   @SubscribeMessage('message')
-  handleMessage(client: Socket, @MessageBody() data: {message:string, user_from:number, user_to:number}[]) {
+  handleMessage(client: Socket, @MessageBody() data: {message:string, message_id: number, user_from:number, user_to:number}[]) {
+    this.server.to(data[0].user_to.toString()).emit('aswner-message', data);
+  }
 
-
-    this.server.to(data[0].user_to.toString()).emit('message', data);
-
+  @SubscribeMessage('message-group')
+  handleMessageGroup(client: Socket, @MessageBody() data: {message:string, message_id: number ,user_from: any, group_to:string}[]) {
+    this.server.to(data[0].group_to).emit('aswner-message-group', data);
   }
 
 }

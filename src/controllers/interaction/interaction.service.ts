@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from 'src/entity/group.entity';
 import { Interaction } from 'src/entity/interaction.entity';
 import { User } from 'src/entity/user.entity';
-import { ILike, Repository } from 'typeorm';
+import { ILike, IsNull, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class InteractionService {
@@ -154,5 +154,21 @@ export class InteractionService {
         id
       }
     })
+  }
+
+  findInteractionGroup = (user: User) => {
+    
+    return this.interactionRepository.find({
+      where: {
+        user_to: {
+          id: user.id
+        },
+        group_from: Not(IsNull())
+      },
+      relations: {
+        group_from: true,
+        user_to: true
+      }
+    });
   }
 }

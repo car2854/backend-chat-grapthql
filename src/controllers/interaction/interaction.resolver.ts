@@ -108,4 +108,18 @@ export class InteractionResolver {
     return interactions;
   }
 
+  @UseGuards(AuthGuard)
+  @Query((returns) => [Interaction])
+  async getGroupInteraction(
+    @Context('uid') uid:number,
+  ){
+
+    const user = await this.interactionService.findUserById(uid);
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+    const interactions = await this.interactionService.findInteractionGroup(user);
+    
+    return interactions;
+
+  }
+
 }

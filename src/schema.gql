@@ -74,6 +74,7 @@ type Query {
   findGroupInteraction(id: String!): Interaction!
   findUserInteractionByUidUser(uid_profile: String!): Interaction!
   getUsersInteractions(userName: String): [Interaction!]!
+  getGroupInteraction: [Interaction!]!
   getChats(id: Int!): [Chat!]!
   getChatsGroup(id: String!): [Chat!]!
   getAllUsersWithinGroup(id: String!): [Interaction!]!
