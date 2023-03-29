@@ -88,4 +88,20 @@ export class UserResolver {
     return user;
 
   }
+
+  @UseGuards(AuthGuard)
+  @Mutation((returns) => User)
+  async updateIdSection(
+    @Context('uid') uid:number,
+    @Args('idSection', {type: () => String!}) idSection: string
+  ){
+
+    const user = await this.userService.findUserById(uid);
+    if (!user) throw new NotFoundException('Usted no esta registrado');
+    user.id_section = idSection;
+    await this.userService.updateUser(user.id, {id_section: idSection});
+    return user;
+
+  }
+ 
 }

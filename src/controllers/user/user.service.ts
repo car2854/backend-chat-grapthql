@@ -90,7 +90,7 @@ export class UserService {
     });
   }
 
-  updateUser = (id:number, data:{uid_profile?: string, status?: string}) => {
+  updateUser = (id:number, data:{uid_profile?: string, status?: string, id_section?: string}) => {
     return this.userRepository.update(id, data);
   }
 }

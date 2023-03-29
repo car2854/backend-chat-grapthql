@@ -36,6 +36,7 @@ type User {
   created_at: DateTime!
   is_active: Boolean!
   uid_profile: String!
+  id_section: String
   token: String
   interactions_from: [Interaction!]
   interactions_to: [Interaction!]
@@ -84,6 +85,7 @@ type Mutation {
   deleteUser(id: Int!): User!
   updateUidProfile: User!
   updateStatusUser(status: String!): User!
+  updateIdSection(idSection: String!): User!
   createChat(newChatInput: NewChatInput!): Chat!
   createChatGroup(newChatGroupInput: NewChatGroupInput!): Chat!
   login(loginUserInput: LoginUserInput!): User!

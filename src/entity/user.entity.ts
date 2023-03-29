@@ -39,6 +39,10 @@ export class User{
   @Field()
   uid_profile: string;
 
+  @Column({nullable: true})
+  @Field({nullable: true})
+  id_section: string;
+
   @Field({nullable: true})
   token?: string;
 
